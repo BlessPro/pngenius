@@ -79,8 +79,8 @@
         <a href="#" class="bg-white text-green-500 px-4 py-2 rounded hover:bg-gray-100">Sign In</a>
     </header>
 
-    <!-- Hero Section -->
-    <section class="text-center px-4 py-12">
+    <!-- Hero Section previous -->
+    {{-- <section class="text-center px-4 py-12">
         <h2 class="text-3xl md:text-4xl font-bold mb-4">From One Format to Another, Instantly!</h2>
         <p class="text-lg mb-8">Convert your images in seconds. Crisp quality, zero hassle.</p>
         <div class="bg-white text-gray-700 rounded-lg border-2 border-dashed border-green-300 p-8 max-w-2xl mx-auto">
@@ -97,7 +97,127 @@
                 </form>
             </div>
         </div>
-    </section>
+    </section> --}}
+
+    
+    <!-- Hero Section another old code-->
+    {{-- <section class="text-center px-4 py-12">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">From One Format to Another, Instantly!</h2>
+        <p class="text-lg mb-8">Convert your images in seconds. Crisp quality, zero hassle.</p>
+
+        <div id="conversion-count" class="text-sm text-center text-white mb-6">
+            Loading conversion count...
+        </div>
+
+        <form id="upload-form" action="{{ route('image.analyze') }}" method="POST" enctype="multipart/form-data" class="bg-white text-gray-700 rounded-lg border-2 border-dashed border-green-300 p-8 max-w-2xl mx-auto">
+            @csrf
+            <div class="flex flex-col items-center justify-center space-y-4">
+                <div class="bg-green-100 text-green-600 p-4 rounded-full">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                </div>
+                <label for="file-upload" class="cursor-pointer text-blue-600 font-semibold">Click here</label>
+                <input id="file-upload" type="file" name="image" class="hidden" required>
+                <p class="text-sm">to upload your file or drag.<br>Supported Format: SVG, JPG, PNG, JPEG</p>
+                <p class="text-xs text-blue-600"><a href="#" class="underline">Sign Up</a> to upload larger files (over 100MB)</p>
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Analyze</button>
+            </div>
+        </form>
+
+        @if (session('preview_url'))
+            <div class="bg-white text-gray-800 rounded-lg shadow-lg max-w-xl mx-auto mt-10 p-6"> --}}
+                {{-- <h2 class="text-xl font-bold mb-4">Image Preview</h2> --}}
+                {{-- <img src="{{ asset(session('preview_url')) }}" alt="Preview" class="w-full max-h-60 object-contain border rounded mb-4"> --}}
+              {{-- <div class="text-sm mb-4 flex justify-between items-center">
+    <div class="flex-1 text-left">
+        <p><strong>Name:</strong> {{ session('image_name') }}</p>
+        <p><strong>Format:</strong> {{ session('image_type') }}</p>
+        <p><strong>Size:</strong> {{ session('image_size') }}</p>
+    </div>
+    <div class="ml-4">
+        <img src="{{ asset(session('preview_url')) }}" alt="Preview" class="w-200 h-200 object-contain border rounded">
+    </div>
+</div>
+
+                <form action="{{ route('image.convert') }}" method="POST" class="space-y-4">
+                    @csrf
+                    <label class="block text-sm font-medium">Select Format:</label>
+                    <select name="format" required class="w-full border rounded p-2">
+                        <option value="jpg">JPG</option>
+                        <option value="png">PNG</option>
+                        <option value="webp">WEBP</option>
+                        <option value="gif">GIF</option>
+                    </select>
+                    <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">Convert</button>
+                </form>
+            </div>
+        @endif
+    </section> --}}
+
+
+
+    <!-- Hero Section -->
+<section class="text-center px-4 py-12">
+    <h2 class="text-3xl md:text-4xl font-bold mb-4">From One Format to Another, Instantly!</h2>
+    <p class="text-lg mb-8">Convert your images in seconds. Crisp quality, zero hassle.</p>
+
+    <div id="conversion-count" class="text-sm text-center text-white mb-6">
+        Loading conversion count...
+    </div>
+
+    {{-- Side-by-side container --}}
+    <div class="flex flex-col md:flex-row md:space-x-6 items-start justify-center max-w-6xl mx-auto">
+        {{-- Upload Form (Left) --}}
+        <form id="upload-form" 
+              action="{{ route('image.analyze') }}" 
+              method="POST" 
+              enctype="multipart/form-data" 
+              class="bg-white text-gray-700 rounded-lg border-2 border-dashed border-green-300 p-8 w-full md:w-1/2">
+            @csrf
+            <div class="flex flex-col items-center justify-center space-y-4">
+                <div class="bg-green-100 text-green-600 p-4 rounded-full">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </div>
+                <label for="file-upload" class="cursor-pointer text-blue-600 font-semibold">Click here</label>
+                <input id="file-upload" type="file" name="image" class="hidden" required>
+                <p class="text-sm">to upload your file or drag.<br>Supported Format: SVG, JPG, PNG, JPEG</p>
+                <p class="text-xs text-blue-600"><a href="#" class="underline">Sign Up</a> to upload larger files (over 100MB)</p>
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Analyze</button>
+            </div>
+        </form>
+
+        {{-- Convert Form with Preview (Right) --}}
+        @if (session('preview_url'))
+        <div class="bg-white text-gray-800 rounded-lg shadow-lg p-6 w-full md:w-1/2 mt-8 md:mt-0">
+            <div class="text-sm mb-4 flex justify-between items-center">
+                <div class="flex-1 text-left">
+                    <p><strong>Name:</strong> {{ session('image_name') }}</p>
+                    <p><strong>Format:</strong> {{ session('image_type') }}</p>
+                    <p><strong>Size:</strong> {{ session('image_size') }}</p>
+                </div>
+                <div class="ml-4">
+                    <img src="{{ asset(session('preview_url')) }}" alt="Preview" class="w-[100px] h-[100px] object-contain border rounded">
+                </div>
+            </div>
+
+            <form action="{{ route('image.convert') }}" method="POST" class="space-y-4">
+                @csrf
+                <label class="block text-sm font-medium">Select Format:</label>
+                <select name="format" required class="w-full border rounded p-2">
+                    <option value="jpg">JPG</option>
+                    <option value="png">PNG</option>
+                    <option value="webp">WEBP</option>
+                    <option value="gif">GIF</option>
+                </select>
+                <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">Convert</button>
+            </form>
+        </div>
+        @endif
+    </div>
+</section>
 
     <!-- Features Section -->
     <section class="bg-white text-gray-800 py-12 px-4">
@@ -188,8 +308,109 @@
             </div>
         </div>
     </footer>
+    
+    <script>
+        function fetchConversionCount() {
+            fetch("{{ route('image.count') }}")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("conversion-count").textContent =
+                        new Intl.NumberFormat().format(data.count) + " images converted so far 🎉";
+                });
+        }
+
+        fetchConversionCount();
+        setInterval(fetchConversionCount, 5000);
+    </script>
 </body>
 </html>
+{{-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PNGenius - Image Converter</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-green-500 text-white">
+    <!-- Header -->
+    <header class="container mx-auto px-4 py-6 flex justify-between items-center">
+        <h1 class="text-xl font-bold">PNGenius</h1>
+        <nav class="space-x-6 hidden md:flex">
+            <a href="#" class="hover:underline">Home</a>
+            <a href="#" class="hover:underline">Convert Image</a>
+            <a href="#" class="hover:underline">Advanced Tools</a>
+            <a href="#" class="hover:underline">Help</a>
+        </nav>
+        <a href="#" class="bg-white text-green-500 px-4 py-2 rounded hover:bg-gray-100">Sign In</a>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="text-center px-4 py-12">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">From One Format to Another, Instantly!</h2>
+        <p class="text-lg mb-8">Convert your images in seconds. Crisp quality, zero hassle.</p>
+
+        <div id="conversion-count" class="text-sm text-center text-white mb-6">
+            Loading conversion count...
+        </div>
+
+        <form id="upload-form" action="{{ route('image.analyze') }}" method="POST" enctype="multipart/form-data" class="bg-white text-gray-700 rounded-lg border-2 border-dashed border-green-300 p-8 max-w-2xl mx-auto">
+            @csrf
+            <div class="flex flex-col items-center justify-center space-y-4">
+                <div class="bg-green-100 text-green-600 p-4 rounded-full">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                </div>
+                <label for="file-upload" class="cursor-pointer text-blue-600 font-semibold">Click here</label>
+                <input id="file-upload" type="file" name="image" class="hidden" required>
+                <p class="text-sm">to upload your file or drag.<br>Supported Format: SVG, JPG, PNG, JPEG</p>
+                <p class="text-xs text-blue-600"><a href="#" class="underline">Sign Up</a> to upload larger files (over 100MB)</p>
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Analyze</button>
+            </div>
+        </form>
+
+        @if (session('preview_url'))
+            <div class="bg-white text-gray-800 rounded-lg shadow-lg max-w-xl mx-auto mt-10 p-6">
+                <h2 class="text-xl font-bold mb-4">Image Preview</h2>
+                <img src="{{ asset(session('preview_url')) }}" alt="Preview" class="w-full max-h-60 object-contain border rounded mb-4">
+                <div class="text-sm mb-4">
+                    <p><strong>Name:</strong> {{ session('image_name') }}</p>
+                    <p><strong>Format:</strong> {{ session('image_type') }}</p>
+                    <p><strong>Size:</strong> {{ session('image_size') }}</p>
+                </div>
+                <form action="{{ route('image.convert') }}" method="POST" class="space-y-4">
+                    @csrf
+                    <label class="block text-sm font-medium">Select Format:</label>
+                    <select name="format" required class="w-full border rounded p-2">
+                        <option value="jpg">JPG</option>
+                        <option value="png">PNG</option>
+                        <option value="webp">WEBP</option>
+                        <option value="gif">GIF</option>
+                    </select>
+                    <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">Convert</button>
+                </form>
+            </div>
+        @endif
+    </section>
+
+    <script>
+        function fetchConversionCount() {
+            fetch("{{ route('image.count') }}")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("conversion-count").textContent =
+                        new Intl.NumberFormat().format(data.count) + " images converted so far 🎉";
+                });
+        }
+
+        fetchConversionCount();
+        setInterval(fetchConversionCount, 5000);
+    </script>
+</body>
+</html> --}}
+{{-- 
 
 
 
@@ -255,4 +476,4 @@
         setInterval(fetchConversionCount, 5000);
     </script>
 </body>
-</html>
+</html> --}}
