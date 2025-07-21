@@ -1,66 +1,102 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🧠 PNGenius — Simple & Smart Image Conversion for Creatives
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+PNGenius is a lightweight, efficient web app built for designers, developers, photographers, and all creatives who work with images. Whether you're converting a logo to WebP or resizing product photos, PNGenius helps you **upload, preview, convert**, and **download** images effortlessly.
 
-## About Laravel
+> We’re building a nice and fast place for creatives to convert images with ease — no clutter, no fuss.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ✨ Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- 🎯 Upload and convert single or multiple images at once
+- 🖼️ Convert to JPG, PNG, WEBP, GIF (TIFF, BMP coming soon)
+- 🧠 Auto-detect image type and metadata
+- 🚀 Real-time conversion with AJAX (no page reloads)
+- 🔢 Live conversion counter in footer
+- 📱 Responsive design for desktop & mobile
+- ✅ Future-ready for cloud scaling (S3 support planned)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🔧 Tech Stack
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 🖼️ Frontend (Client-Side)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Tool                  | Role                                                             |
+|-----------------------|------------------------------------------------------------------|
+| **Blade (Laravel)**   | Templating engine for the HTML UI                                |
+| **Tailwind CSS**      | Styling framework for responsive, utility-first design           |
+| **JavaScript (Vanilla)** | Handles UI interactivity, file uploads, and AJAX logic          |
+| **Fetch API**         | AJAX communication with backend (upload, convert, poll count)    |
+| **Custom Modal/Alert JS** | Alerts users when they exceed the file limit (max 10)         |
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 🧾 Backend (Server-Side)
 
-### Premium Partners
+| Tool                          | Role                                                                    |
+|-------------------------------|-------------------------------------------------------------------------|
+| **Laravel (PHP)**             | Main framework — handles routing, validation, file processing, etc.     |
+| **Intervention Image (Gd)**   | Image manipulation: format conversion, resizing, metadata reading       |
+| **Laravel Storage**           | Stores uploaded and converted images                                    |
+| **Laravel Session**           | Tracks temporary image info per session                                 |
+| **Eloquent ORM / DB**         | Logs conversions for stats + analytics                                  |
+| **AJAX Endpoint**             | `/convert` controller handles per-file conversion requests              |
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+---
 
-## Contributing
+### 🗃️ Database
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Tool                  | Role                                                            |
+|-----------------------|-----------------------------------------------------------------|
+| **MySQL / MariaDB / SQLite** | Stores logs (filename, format, time, size, etc.)          |
+| **image_conversions** table | Drives the real-time conversion counter on the footer     |
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 📁 File Storage
 
-## Security Vulnerabilities
+| Tool                          | Role                                                   |
+|-------------------------------|--------------------------------------------------------|
+| **Laravel Public Disk**       | Temporary store for uploaded and converted files       |
+| **(Optional) AWS S3**         | Planned support for cloud storage at scale             |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+### 🧪 Testing & Dev Tools
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Tool                        | Role                                                           |
+|-----------------------------|----------------------------------------------------------------|
+| **Laravel Valet / Sail / XAMPP / Homestead** | Local dev environment options             |
+| **Browser DevTools**        | Debug frontend and AJAX logic                                  |
+| **Postman (optional)**      | Manually test file endpoints and conversion logic              |
+
+---
+
+## 📁 Documentation
+
+- [`algo-v1.md`](algo-v1.md) — Original conversion algorithm (single image, basic)
+- [`algo-v2.md`](algo-v2.md) — Upgraded multi-image AJAX conversion system with real-time UI
+
+---
+
+## 📌 Future Enhancements
+
+- ✂️ Cropping, resizing & compression level control
+- 🔍 Live image previews (before/after)
+- 🧼 Auto-cleanup queue for temporary files
+- 🔐 User accounts with history tracking
+- ☁️ Cloud sync (S3, GDrive optional)
+
+---
+
+## 🤝 Contributing
+
+Feel free to fork and suggest improvements. Bug reports, UI ideas, and optimization suggestions are welcome.
+
+---
+
+## 🧑‍🎨 Made for Creatives, by Creatives.
+
+---
+
