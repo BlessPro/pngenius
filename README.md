@@ -4,9 +4,11 @@ PNGenius is a lightweight, efficient web app built especially for designers, pho
 
 > We’re building a beautiful space for creatives to convert images quickly and effortlessly.
 
-### DOCUMENTATION
-- [`algo-v1.md`](algo-v1.md) — Original conversion algorithm (single image, basic)
-- [`algo-v2.md`](algo-v2.md) — Upgraded multi-image AJAX conversion system with real-time UI
+### 📚 DOCUMENTATION
+
+- [🧠 View PNGenius v1 Algorithm Flow (Legacy)](./VERSION-1.md)
+- [🚀 Upgrade Notes & Roadmap](./VERSION-2.md)
+
 
 ---
 
