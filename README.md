@@ -10,8 +10,6 @@ PNGenius is a lightweight, efficient web app built especially for designers, pho
 
 ---
 
----
-
 ## ✨ Features
 
 - 🎯 **Multi-Image Upload:** Easily upload one or several images (up to 10 at a time).
