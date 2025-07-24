@@ -51,22 +51,6 @@
         <button id="convert-all" class="bg-green-600 text-white px-6 py-2 hover:bg-green-700 disabled:opacity-50">CONVERT</button>
     </div>
 </div>
-
-       {{-- <div class="text-center mb-6 ">
-            <button id="file-btn" class="bg-green-600 text-white px-4 py-2  hover:bg-green-700 font-semibold">ADD IMAGE(S)</button>
-            <input id="file-input" type="file" accept="image/*" multiple hidden>
-        </div>
-
-        <div id="file-list" class="space-y-4 max-w-4xl mx-auto hidden"></div>
-<div class="flex justify-between items-center mb-6 space-y-4 max-w-4xl mx-auto">
-     <div class="text-center mb-6 mt-5">
-            <button id="file-btn" class="bg-green-600 text-white px-4 py-2  hover:bg-green-700 font-semibold">ADD IMAGE(S)</button>
-            <input id="file-input" type="file" accept="image/*" multiple hidden>
-        </div>
-        <div class="text-center mt-5">
-            <button id="convert-all" class="bg-green-600 text-white px-6 py-2  hover:bg-green-700 disabled:opacity-50">CONVERT</button>
-        </div>
-</div> --}}
     </section>
     <!-- Feature Section -->
     <section class="py-16 bg-white">
@@ -226,133 +210,8 @@ setInterval(() => {
             sizeEl.textContent = displayValue.value.toFixed(2) + ' ' + displayValue.suffix;
         });
 }, 3000); // runs every 5 seconds
-
-    // fetch('/conversion-stats')
-    //     .then(res => res.json())
-    //     .then(data => {
-    //         const countEl = document.getElementById('file-count');
-    //         const sizeEl = document.getElementById('total-size');
-
-    //         animateCount(countEl, 0, data.count);
-
-    //         const sizeInMB = data.total_size_mb;
-    //         const displayValue = sizeInMB >= 1024
-    //             ? { value: sizeInMB / 1024, suffix: 'GB' }
-    //             : { value: sizeInMB, suffix: 'MB' };
-
-    //         animateDecimal(sizeEl, 0, displayValue.value, displayValue.suffix);
-    //     });
 </script>
 
-{{--
-    <script>
-        const MAX_FILES = 10;
-        const fileInput = document.getElementById('file-input');
-        const fileBtn = document.getElementById('file-btn');
-        const fileList = document.getElementById('file-list');
-        const convertBtn = document.getElementById('convert-all');
-        const files = [];
-
-        fileBtn.onclick = () => fileInput.click();
-
-        fileInput.onchange = () => {
-            const newFiles = Array.from(fileInput.files);
-            if ((files.length + newFiles.length) > MAX_FILES) {
-                alert("You can only upload a maximum of 10 images.");
-                return;
-            }
-            if (newFiles.length > 0) fileList.classList.remove('hidden');
-            newFiles.forEach(addFileRow);
-            fileInput.value = null;
-        };
-
-        function addFileRow(file) {
-            const id = Date.now() + Math.random();
-            files.push({ file, id, converted: false });
-
-            const div = document.createElement('div');
-            div.className = "bg-white border px-4 py-3 rounded shadow flex flex-col md:flex-row md:items-center md:justify-between gap-4";
-            div.dataset.id = id;
-
-            div.innerHTML = `
-                <div class="flex items-center gap-2">
-                    <span class="text-gray-700">📄</span>
-                    <span class="font-medium">${file.name}</span>
-                </div>
-                <div class="flex items-center gap-4 flex-wrap">
-                    <select class="format-select border px-2 py-1 rounded">
-                        <option value="jpg">JPG</option>
-                        <option value="png">PNG</option>
-                        <option value="webp">WEBP</option>
-                        <option value="gif">GIF</option>
-                        <option value="bmp">BMP</option>
-                        <option value="tiff">TIFF</option>
-                    </select>
-                    <span class="status text-sm font-medium text-yellow-600">Waiting</span>
-                    <button class="bg-green-600 text-white px-3 py-1 rounded hidden download-btn">Download</button>
-                    <button class="text-red-500 font-bold remove">&times;</button>
-                </div>
-            `;
-
-            div.querySelector(".remove").onclick = () => {
-                const index = files.findIndex(f => f.id === id);
-                if (index !== -1) files.splice(index, 1);
-                div.remove();
-                if (files.length === 0) fileList.classList.add('hidden');
-            };
-
-            fileList.appendChild(div);
-        }
-
-        convertBtn.onclick = () => {
-            convertBtn.disabled = true;
-            files.forEach(({ file, id, converted }) => {
-                if (converted) return;
-
-                const div = document.querySelector(`[data-id='${id}']`);
-                const status = div.querySelector(".status");
-                const format = div.querySelector(".format-select").value;
-                const downloadBtn = div.querySelector(".download-btn");
-
-                const formData = new FormData();
-                formData.append("image", file);
-                formData.append("format", format);
-
-                status.textContent = "Processing...";
-                status.className = "status text-sm font-medium text-blue-600";
-
-                fetch("/convert-file", {
-                    method: "POST",
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: formData
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        status.textContent = "Complete";
-                        status.className = "status text-sm font-medium text-green-600";
-
-                        downloadBtn.href = data.download;
-                        downloadBtn.classList.remove("hidden");
-                        downloadBtn.setAttribute("download", "");
-                        files.find(f => f.id === id).converted = true;
-                    } else {
-                        status.textContent = "Failed";
-                        status.className = "status text-sm font-medium text-red-600";
-                    }
-                })
-                .catch(() => {
-                    status.textContent = "Failed";
-                    status.className = "status text-sm font-medium text-red-600";
-                })
-                .finally(() => {
-                    convertBtn.disabled = false;
-                });
-            });
-        }
-    </script> --}}
 
     <script>
     const MAX_FILES = 10;
