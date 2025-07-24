@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ImageConvertController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 // Home Page: Upload + Preview + Convert
 Route::get('/', [ImageConvertController::class, 'index'])->name('home');
@@ -24,3 +25,29 @@ Route::get('/conversion-count', function () {
         'count' => DB::table('image_conversions')->count()
     ]);
 })->name('image.count');
+// Route::get('/conversion-stats', function () {
+//     $totalCount = DB::table('image_conversions')->count();
+//     $totalSize = DB::table('image_conversions')->sum('original_size'); // in bytes
+
+//     return response()->json([
+//         'count' => $totalCount,
+//         'total_size_mb' => round($totalSize / (1024 * 1024), 2)
+//     ]);
+// });
+Route::get('/conversion-stats', function () {
+    $totalCount = DB::table('image_conversions')->count();
+    $totalSize = DB::table('image_conversions')->sum('original_size');
+
+    Log::info('Stats Debug', [
+        'count' => $totalCount,
+        'total_size_bytes' => $totalSize,
+                'total_size_mb' => round($totalSize / (1024 * 1024), 2)
+
+    ]);
+
+    return response()->json([
+        'count' => $totalCount,
+        'total_size_mb' => round($totalSize / (1024 * 1024), 2)
+    ]);
+});
+

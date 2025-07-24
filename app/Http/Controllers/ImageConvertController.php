@@ -46,6 +46,7 @@ class ImageConvertController extends Controller
             Storage::disk('public')->put($filePath, $converted);
 
             DB::table('image_conversions')->insert([
+                'original_size' => $uploaded->getSize(), // in bytes
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
