@@ -13,6 +13,8 @@ Route::post('/analyze', [ImageConvertController::class, 'analyze'])->name('image
 // Convert image to selected format
 Route::post('/convert', [ImageConvertController::class, 'convert'])->name('image.convert');
 
+Route::post('/convert-file', [ImageConvertController::class, 'convertFile'])->name('image.convertFile');
+
 // Download converted image (with fake progress)
 Route::get('/download', [ImageConvertController::class, 'download'])->name('image.download');
 
