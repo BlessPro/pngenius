@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PNGenius - Download</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @else
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    @endif
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {
@@ -20,9 +24,9 @@
     <header class="bg-green-500 container mx-auto px-4 py-6 flex justify-between items-center">
         <a href="/"><h1 class="text-xl font-bold">PNGenius</h1></a>
         <nav class="space-x-6 hidden md:flex">
-            <a href="#" class="hover:underline">Home</a>
-            <a href="#" class="hover:underline">Convert Image</a>
-            <a href="#" class="hover:underline">Advanced Tools</a>
+            <a href="{{ route('home') }}" class="hover:underline">Convert Image</a>
+            <a href="{{ route('image.removeBg') }}" class="hover:underline">Remove BG</a>
+            <a href="{{ route('image.toPdf') }}" class="hover:underline">Image to PDF</a>
             <a href="#" class="hover:underline">Help</a>
         </nav>
         <a href="#" class="bg-white text-green-500 px-4 py-2 rounded hover:bg-gray-100">Sign In</a>
@@ -106,7 +110,7 @@
                 .then(data => {
                     const counter = document.getElementById("conversion-count");
                     if (counter) {
-                        counter.textContent = new Intl.NumberFormat().format(data.count) + " images converted so far 🎉";
+                        counter.textContent = new Intl.NumberFormat().format(data.count) + " images converted so far.";
                     }
                 });
         }

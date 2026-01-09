@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PNGenius - Multi Image Converter</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @else
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    @endif
 </head>
 <body class="bg-[#F9F9F9] text-gray-800 min-h-screen">
     <!-- Header -->
@@ -12,9 +16,9 @@
         <div class="container mx-auto flex justify-between items-center px-4">
             <h1 class="text-xl font-bold">PNGenius</h1>
             <nav class="space-x-4 hidden md:block">
-                <a href="#" class="hover:underline">Home</a>
-                <a href="#" class="hover:underline">Convert Image</a>
-                <a href="#" class="hover:underline">Advanced Tools</a>
+                <a href="{{ route('home') }}" class="hover:underline font-semibold">Convert Image</a>
+                <a href="{{ route('image.removeBg') }}" class="hover:underline">Remove BG</a>
+                <a href="{{ route('image.toPdf') }}" class="hover:underline">Image to PDF</a>
                 <a href="#" class="hover:underline">Help</a>
                 <button class="border border-white rounded px-4 py-1 hover:bg-white hover:text-green-600">Sign In</button>
             </nav>
@@ -47,8 +51,11 @@
         <button id="file-btn" class="bg-green-600 text-white px-4 py-2 hover:bg-green-700 font-semibold">ADD IMAGE(S)</button>
         <input id="file-input-dup" type="file" accept="image/*" multiple hidden>
     </div>
-    <div class="text-center mt-5">
+    <div class="text-center mt-5 flex flex-col items-center gap-3">
         <button id="convert-all" class="bg-green-600 text-white px-6 py-2 hover:bg-green-700 disabled:opacity-50">CONVERT</button>
+        <div id="zip-container" class="hidden">
+            <button id="download-zip" class="bg-blue-600 text-white px-6 py-2 hover:bg-blue-700 disabled:opacity-50">DOWNLOAD ZIP</button>
+        </div>
     </div>
 </div>
     </section>
@@ -56,32 +63,32 @@
     <section class="py-16 bg-white">
         <div class="max-w-5xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
             <div>
-                <div class="text-green-600 text-3xl mb-2">🔒</div>
+                <div class="text-green-600 text-3xl mb-2">01</div>
                 <h3 class="font-bold text-lg">Multi-Format Support</h3>
                 <p class="text-sm text-gray-600">Convert a wide range of file types documents, images, audio, and video to and from popular formats.</p>
             </div>
             <div>
-                <div class="text-green-600 text-3xl mb-2">📤</div>
+                <div class="text-green-600 text-3xl mb-2">02</div>
                 <h3 class="font-bold text-lg">Fast & Easy Upload</h3>
                 <p class="text-sm text-gray-600">Drag-and-drop or click-to-upload with clear file size limits and progress indicators.</p>
             </div>
             <div>
-                <div class="text-green-600 text-3xl mb-2">🌟</div>
+                <div class="text-green-600 text-3xl mb-2">03</div>
                 <h3 class="font-bold text-lg">High-Quality Conversion</h3>
                 <p class="text-sm text-gray-600">Maintain original quality with options for resolution or compression adjustments.</p>
             </div>
             <div>
-                <div class="text-green-600 text-3xl mb-2">📂</div>
+                <div class="text-green-600 text-3xl mb-2">04</div>
                 <h3 class="font-bold text-lg">Batch Conversion</h3>
                 <p class="text-sm text-gray-600">Convert multiple files at once to save time and streamline workflows.</p>
             </div>
             <div>
-                <div class="text-green-600 text-3xl mb-2">❌</div>
+                <div class="text-green-600 text-3xl mb-2">05</div>
                 <h3 class="font-bold text-lg">No Software Installation</h3>
                 <p class="text-sm text-gray-600">Fully web-based with no downloads required, accessible from any device or browser.</p>
             </div>
             <div>
-                <div class="text-green-600 text-3xl mb-2">🔐</div>
+                <div class="text-green-600 text-3xl mb-2">06</div>
                 <h3 class="font-bold text-lg">Secure & Private</h3>
                 <p class="text-sm text-gray-600">All files are encrypted during transfer and deleted from servers after conversion to protect user privacy.</p>
             </div>
@@ -194,7 +201,7 @@
     }
     // update to refreshe every few seconds
 setInterval(() => {
-    fetch('/conversion-stats')
+    fetch('{{ route('image.stats') }}')
         .then(res => res.json())
         .then(data => {
             const countEl = document.getElementById('file-count');
@@ -209,7 +216,7 @@ setInterval(() => {
 
             sizeEl.textContent = displayValue.value.toFixed(2) + ' ' + displayValue.suffix;
         });
-}, 3000); // runs every 5 seconds
+}, 3000); // runs every 3 seconds
 </script>
 
 
@@ -223,6 +230,8 @@ setInterval(() => {
     const convertBtn = document.getElementById('convert-all');
     const initialUpload = document.getElementById('initial-upload');
     const actionButtons = document.getElementById('action-buttons');
+    const zipContainer = document.getElementById('zip-container');
+    const zipBtn = document.getElementById('download-zip');
     const files = [];
 
     // Handlers for both file buttons
@@ -242,12 +251,31 @@ setInterval(() => {
             // Toggle buttons
             initialUpload.classList.add('hidden');
             actionButtons.classList.remove('hidden');
+            updateZipVisibility();
         };
     });
 
+    function updateZipVisibility() {
+        const readyCount = files.filter(item => item.converted && item.file_name).length;
+        if (readyCount >= 2) {
+            zipContainer.classList.remove('hidden');
+        } else {
+            zipContainer.classList.add('hidden');
+        }
+        updateZipState(readyCount);
+    }
+
+    function updateZipState(readyCount = null) {
+        const count = readyCount === null
+            ? files.filter(item => item.converted && item.file_name).length
+            : readyCount;
+        zipBtn.disabled = count < 2;
+    }
+
+
     function addFileRow(file) {
         const id = Date.now() + Math.random();
-        files.push({ file, id, converted: false });
+        files.push({ file, id, converted: false, file_name: null });
 
         const div = document.createElement('div');
         div.className = "bg-white border px-4 py-3 rounded shadow flex flex-col md:flex-row md:items-center md:justify-between gap-4";
@@ -255,7 +283,7 @@ setInterval(() => {
 
         div.innerHTML = `
             <div class="flex items-center gap-2">
-                <span class="text-gray-700">📄</span>
+                <span class="text-gray-700">IMG</span>
                 <span class="font-medium">${file.name}</span>
             </div>
             <div class="flex items-center gap-4 flex-wrap">
@@ -268,7 +296,7 @@ setInterval(() => {
                     <option value="tiff">TIFF</option>
                 </select>
                 <span class="status text-sm font-medium text-yellow-600">Waiting</span>
-                <button class="bg-green-600 text-white px-3 py-1 rounded hidden download-btn">Download</button>
+                <a class="bg-green-600 text-white px-3 py-1 rounded hidden download-btn" href="#">Download</a>
                 <button class="text-red-500 font-bold remove">&times;</button>
             </div>
         `;
@@ -283,16 +311,22 @@ setInterval(() => {
                 actionButtons.classList.add('hidden');
                 initialUpload.classList.remove('hidden');
             }
+
+            updateZipVisibility();
         };
 
         fileList.classList.remove('hidden');
         fileList.appendChild(div);
+        updateZipVisibility();
     }
 
     convertBtn.onclick = () => {
         convertBtn.disabled = true;
+        let pending = 0;
+
         files.forEach(({ file, id, converted }) => {
             if (converted) return;
+            pending += 1;
 
             const div = document.querySelector(`[data-id='${id}']`);
             const status = div.querySelector(".status");
@@ -306,7 +340,7 @@ setInterval(() => {
             status.textContent = "Processing...";
             status.className = "status text-sm font-medium text-blue-600";
 
-            fetch("/convert-file", {
+            fetch('{{ route('image.convertFile') }}', {
                 method: "POST",
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -316,15 +350,23 @@ setInterval(() => {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    status.textContent = "Complete";
+                    if (data.format && data.format !== format) {
+                        status.textContent = `Complete (saved as ${data.format.toUpperCase()})`;
+                    } else {
+                        status.textContent = "Complete";
+                    }
                     status.className = "status text-sm font-medium text-green-600";
 
                     downloadBtn.href = data.download;
                     downloadBtn.classList.remove("hidden");
                     downloadBtn.setAttribute("download", "");
-                    files.find(f => f.id === id).converted = true;
+                    const fileEntry = files.find(f => f.id === id);
+                    if (fileEntry) {
+                        fileEntry.converted = true;
+                        fileEntry.file_name = data.file_name || null;
+                    }
                 } else {
-                    status.textContent = "Failed";
+                    status.textContent = data.message ? `Failed: ${data.message}` : "Failed";
                     status.className = "status text-sm font-medium text-red-600";
                 }
             })
@@ -333,8 +375,64 @@ setInterval(() => {
                 status.className = "status text-sm font-medium text-red-600";
             })
             .finally(() => {
-                convertBtn.disabled = false;
+                pending -= 1;
+                if (pending <= 0) {
+                    convertBtn.disabled = false;
+                }
+                updateZipVisibility();
             });
+        });
+
+        if (pending === 0) {
+            convertBtn.disabled = false;
+        }
+        updateZipVisibility();
+    };
+
+    zipBtn.onclick = () => {
+        const readyFiles = files
+            .filter(item => item.converted && item.file_name)
+            .map(item => item.file_name);
+
+        if (readyFiles.length < 2) {
+            alert('Convert at least two images before downloading a ZIP.');
+            return;
+        }
+
+        const originalLabel = zipBtn.textContent;
+        zipBtn.disabled = true;
+        zipBtn.textContent = 'BUILDING ZIP...';
+
+        const formData = new FormData();
+        readyFiles.forEach(fileName => formData.append('files[]', fileName));
+
+        fetch('{{ route('image.downloadZip') }}', {
+            method: "POST",
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const link = document.createElement('a');
+                link.href = data.download;
+                link.setAttribute('download', data.file_name || '');
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            } else {
+                alert(data.message ? `ZIP failed: ${data.message}` : 'ZIP creation failed.');
+            }
+        })
+        .catch(() => {
+            alert('ZIP creation failed.');
+        })
+        .finally(() => {
+            zipBtn.disabled = false;
+            zipBtn.textContent = originalLabel;
+            updateZipVisibility();
         });
     };
 </script>
