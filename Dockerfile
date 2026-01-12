@@ -24,10 +24,13 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Install PHP dependencies first for better layer caching
 COPY composer.json composer.lock /var/www/
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
 # Copy your Laravel app
 COPY . /var/www
+
+# Run Laravel package discovery after app files exist
+RUN php artisan package:discover --ansi
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www \
