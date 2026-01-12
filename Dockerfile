@@ -22,6 +22,10 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Install PHP dependencies first for better layer caching
+COPY composer.json composer.lock /var/www/
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
 # Copy your Laravel app
 COPY . /var/www
 
@@ -36,4 +40,4 @@ CMD php artisan config:cache && \
     php artisan view:cache && \
     php artisan migrate --force && \
     php artisan storage:link && \
-    php artisan serve --host=0.0.0.0 --port=8000
+    php artisan serve --host=0.0.0.0 --port=${PORT:-8000}

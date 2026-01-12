@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    image: pngenius-app
+    ports:
+      - "${APP_PORT:-9001}:8000"
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: "http://localhost:${APP_PORT:-9001}"
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-pngenius}
+      DB_USERNAME: ${DB_USERNAME:-pngeniusdb}
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+    volumes:
+      - .:/var/www
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-pngenius}
+      POSTGRES_USER: ${DB_USERNAME:-pngeniusdb}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

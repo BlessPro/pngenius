@@ -96,10 +96,10 @@
     </section>
 
 <div class="bg-gray-100 py-6 text-center text-gray-600 text-lg font-medium">
-    We've already converted
+    This page has
     <span id="file-count" class="text-gray-800 font-bold">0</span> files
-    with a total size of
-    <span id="total-size" class="text-gray-800 font-bold">0 GB</span>.
+    totaling
+    <span id="total-size" class="text-gray-800 font-bold">0 MB</span>.
 </div>
 
 
@@ -158,68 +158,6 @@
 <footer class="bg-gray-800 text-gray-300 py-4  text-center text-sm">
     <p>&copy; 2025 PNGenius. Built by <span class="text-green-400 font-semibold">10minal</span>.</p>
 </footer>
-    <!-- for the file counting -->
-
-
-<script>
-    function animateCount(el, start, end, duration = 3000) {
-        let startTime = null;
-
-        function update(timestamp) {
-            if (!startTime) startTime = timestamp;
-            const progress = timestamp - startTime;
-            const value = Math.floor(start + (end - start) * (progress / duration));
-
-            el.textContent = value.toLocaleString();
-            if (progress < duration) {
-                requestAnimationFrame(update);
-            } else {
-                el.textContent = end.toLocaleString();
-            }
-        }
-
-        requestAnimationFrame(update);
-    }
-
-    function animateDecimal(el, start, end, suffix = 'MB', duration = 3000) {
-        let startTime = null;
-
-        function update(timestamp) {
-            if (!startTime) startTime = timestamp;
-            const progress = timestamp - startTime;
-            const value = start + (end - start) * (progress / duration);
-
-            el.textContent = value.toFixed(2) + ' ' + suffix;
-            if (progress < duration) {
-                requestAnimationFrame(update);
-            } else {
-                el.textContent = end.toFixed(2) + ' ' + suffix;
-            }
-        }
-
-        requestAnimationFrame(update);
-    }
-    // update to refreshe every few seconds
-setInterval(() => {
-    fetch('{{ route('image.stats') }}')
-        .then(res => res.json())
-        .then(data => {
-            const countEl = document.getElementById('file-count');
-            const sizeEl = document.getElementById('total-size');
-
-            countEl.textContent = data.count.toLocaleString();
-
-            const sizeInMB = data.total_size_mb;
-            const displayValue = sizeInMB >= 1024
-                ? { value: sizeInMB / 1024, suffix: 'GB' }
-                : { value: sizeInMB, suffix: 'MB' };
-
-            sizeEl.textContent = displayValue.value.toFixed(2) + ' ' + displayValue.suffix;
-        });
-}, 3000); // runs every 3 seconds
-</script>
-
-
     <script>
     const MAX_FILES = 10;
     const fileInput = document.getElementById('file-input');
@@ -232,6 +170,8 @@ setInterval(() => {
     const actionButtons = document.getElementById('action-buttons');
     const zipContainer = document.getElementById('zip-container');
     const zipBtn = document.getElementById('download-zip');
+    const fileCountEl = document.getElementById('file-count');
+    const totalSizeEl = document.getElementById('total-size');
     const files = [];
 
     // Handlers for both file buttons
@@ -270,6 +210,28 @@ setInterval(() => {
             ? files.filter(item => item.converted && item.file_name).length
             : readyCount;
         zipBtn.disabled = count < 2;
+    }
+
+    function formatBytes(bytes) {
+        if (bytes >= 1024 * 1024 * 1024) {
+            return { value: bytes / (1024 * 1024 * 1024), suffix: 'GB' };
+        }
+        if (bytes >= 1024 * 1024) {
+            return { value: bytes / (1024 * 1024), suffix: 'MB' };
+        }
+        if (bytes >= 1024) {
+            return { value: bytes / 1024, suffix: 'KB' };
+        }
+        return { value: bytes, suffix: 'B' };
+    }
+
+    function updatePageStats() {
+        const count = files.length;
+        const totalBytes = files.reduce((sum, item) => sum + (item.file?.size || 0), 0);
+        const display = formatBytes(totalBytes);
+
+        fileCountEl.textContent = count.toLocaleString();
+        totalSizeEl.textContent = display.value.toFixed(2) + ' ' + display.suffix;
     }
 
 
@@ -313,11 +275,13 @@ setInterval(() => {
             }
 
             updateZipVisibility();
+            updatePageStats();
         };
 
         fileList.classList.remove('hidden');
         fileList.appendChild(div);
         updateZipVisibility();
+        updatePageStats();
     }
 
     convertBtn.onclick = () => {
@@ -435,6 +399,8 @@ setInterval(() => {
             updateZipVisibility();
         });
     };
+
+    updatePageStats();
 </script>
 
 </body>

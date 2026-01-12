@@ -141,6 +141,24 @@ GRANT ALL PRIVILEGES ON DATABASE pngenius TO pngenius_user;
 
 ---
 
+## Docker (Compose)
+
+1. Copy `.env.example` to `.env` and set `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD` (Docker will use these values).
+2. If you do not already have an `APP_KEY`, generate one locally (`php artisan key:generate`) or set it in `.env`.
+3. Build and start the containers:
+   ```
+   docker compose up --build
+   ```
+4. If migrations fail because the database is still starting, run:
+   ```
+   docker compose exec app php artisan migrate
+   ```
+5. Visit the app at `http://localhost:9001` (override with `APP_PORT` in `.env`).
+
+Note: The container serves on port 8000, mapped to 9001 by default.
+
+---
+
 ## Documentation
 
 For more in-depth details, refer to:

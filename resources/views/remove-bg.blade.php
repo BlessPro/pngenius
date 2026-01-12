@@ -71,6 +71,67 @@
         </div>
     </section>
 
+    <div class="bg-gray-100 py-6 text-center text-gray-600 text-lg font-medium">
+        This page has
+        <span id="file-count" class="text-gray-800 font-bold">0</span> files
+        totaling
+        <span id="total-size" class="text-gray-800 font-bold">0 MB</span>.
+    </div>
+
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-5 gap-8 text-sm">
+            <div>
+                <h4 class="text-green-400 font-bold text-lg mb-2">PNGenius</h4>
+                <p class="text-gray-400">Build a modern and creative website with crealand</p>
+                <div class="flex space-x-3 mt-4">
+                    <a href="#" class="text-gray-400 hover:text-white">G</a>
+                    <a href="#" class="text-gray-400 hover:text-white">T</a>
+                    <a href="#" class="text-gray-400 hover:text-white">I</a>
+                    <a href="#" class="text-gray-400 hover:text-white">L</a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-2">Product</h4>
+                <ul class="space-y-1 text-gray-400">
+                    <li><a href="#">Landingpage</a></li>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Pricing</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-2">Services</h4>
+                <ul class="space-y-1 text-gray-400">
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Design</a></li>
+                    <li><a href="#">Themes</a></li>
+                    <li><a href="#">UI Kit</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-2">Company</h4>
+                <ul class="space-y-1 text-gray-400">
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Careers</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-2">More</h4>
+                <ul class="space-y-1 text-gray-400">
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">License</a></li>
+                    <li><a href="#">Changelog</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <footer class="bg-gray-800 text-gray-300 py-4 text-center text-sm">
+        <p>&copy; 2025 PNGenius. Built by <span class="text-green-400 font-semibold">10minal</span>.</p>
+    </footer>
+
 <script>
     const fileInput = document.getElementById('bg-file');
     const uploadBtn = document.getElementById('bg-upload-btn');
@@ -81,6 +142,8 @@
     const result = document.getElementById('bg-result');
     const resultEmpty = document.getElementById('bg-result-empty');
     const downloadLink = document.getElementById('bg-download');
+    const fileCountEl = document.getElementById('file-count');
+    const totalSizeEl = document.getElementById('total-size');
     let currentFile = null;
 
     uploadBtn.onclick = () => fileInput.click();
@@ -102,7 +165,31 @@
         downloadLink.classList.add('hidden');
         result.classList.add('hidden');
         resultEmpty.classList.remove('hidden');
+
+        updatePageStats();
     };
+
+    function formatBytes(bytes) {
+        if (bytes >= 1024 * 1024 * 1024) {
+            return { value: bytes / (1024 * 1024 * 1024), suffix: 'GB' };
+        }
+        if (bytes >= 1024 * 1024) {
+            return { value: bytes / (1024 * 1024), suffix: 'MB' };
+        }
+        if (bytes >= 1024) {
+            return { value: bytes / 1024, suffix: 'KB' };
+        }
+        return { value: bytes, suffix: 'B' };
+    }
+
+    function updatePageStats() {
+        const count = currentFile ? 1 : 0;
+        const totalBytes = currentFile ? currentFile.size : 0;
+        const display = formatBytes(totalBytes);
+
+        fileCountEl.textContent = count.toLocaleString();
+        totalSizeEl.textContent = display.value.toFixed(2) + ' ' + display.suffix;
+    }
 
     removeBtn.onclick = () => {
         if (!currentFile) {
@@ -150,6 +237,8 @@
             removeBtn.disabled = false;
         });
     };
+
+    updatePageStats();
 </script>
 </body>
 </html>

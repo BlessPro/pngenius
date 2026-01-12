@@ -57,8 +57,11 @@
 
         
     </section>
-<div id="conversion-count" class="text-[25px] text-center text-black mb-6">
-        Loading conversion count...
+    <div class="bg-gray-100 py-6 text-center text-gray-600 text-lg font-medium">
+        This page has
+        <span id="file-count" class="text-gray-800 font-bold">{{ session('converted_path') ? 1 : 0 }}</span> files
+        totaling
+        <span id="total-size" class="text-gray-800 font-bold">{{ session('converted_size') ?? '0 MB' }}</span>.
     </div>
     <!-- Footer -->
     <footer class="bg-gray-900 text-gray-300 py-12">
@@ -101,24 +104,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- Optional JS (if needed for conversion count or later enhancements) -->
-    <script>
-        function fetchConversionCount() {
-            fetch("{{ route('image.count') }}")
-                .then(response => response.json())
-                .then(data => {
-                    const counter = document.getElementById("conversion-count");
-                    if (counter) {
-                        counter.textContent = new Intl.NumberFormat().format(data.count) + " images converted so far.";
-                    }
-                });
-        }
-
-        // Optional if you're still displaying conversion count
-        fetchConversionCount();
-        setInterval(fetchConversionCount, 5000);
-    </script>
 
 </body>
 </html>
