@@ -22,6 +22,9 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Increase upload limits for Render
+RUN printf "upload_max_filesize=20M\npost_max_size=20M\nmemory_limit=256M\n" > /usr/local/etc/php/conf.d/uploads.ini
+
 # Install PHP dependencies first for better layer caching
 COPY composer.json composer.lock /var/www/
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
