@@ -179,12 +179,14 @@ class ImageConvertController extends Controller
                 'format' => $result['format'],
                 'size_bytes' => $result['size_bytes'],
             ]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('Image conversion failed', ['error' => $e->getMessage()]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Conversion failed: ' . $e->getMessage()
+                'message' => config('app.debug')
+                    ? 'Conversion failed: ' . $e->getMessage()
+                    : 'Conversion failed. Please try again.'
             ], 500);
         }
     }
