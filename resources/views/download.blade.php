@@ -46,7 +46,7 @@
                 <p><strong>File Name:</strong> {{ session('converted_name') }}</p>
                 <p><strong>Format:</strong> {{ session('converted_format') }}</p>
                 <p><strong>Size:</strong> {{ session('converted_size') }}</p>
-                <a href="{{ asset(session('converted_path')) }}" download
+                <a href="{{ '/' . ltrim(session('converted_path'), '/') }}" download
                    class="mt-4 inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
                    Download File
                 </a>

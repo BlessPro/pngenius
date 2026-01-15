@@ -206,7 +206,7 @@
         formData.append('format', 'png');
         formData.append('remove_bg', '1');
 
-        fetch('{{ route('image.convertFile') }}', {
+        fetch('{{ route('image.convertFile', [], false) }}', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',

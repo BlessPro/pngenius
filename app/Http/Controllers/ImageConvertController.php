@@ -84,7 +84,7 @@ class ImageConvertController extends Controller
 
             return response()->json([
                 'success' => true,
-                'download' => asset('storage/' . $filePath),
+                'download' => '/storage/' . $filePath,
                 'file_name' => $pdfName,
             ]);
         } catch (\Throwable $e) {
@@ -173,7 +173,7 @@ class ImageConvertController extends Controller
 
             return response()->json([
                 'success' => true,
-                'download' => asset('storage/' . $result['file_path']),
+                'download' => '/storage/' . $result['file_path'],
                 'file_name' => $result['file_name'],
                 'file_path' => $result['file_path'],
                 'format' => $result['format'],
@@ -240,7 +240,7 @@ class ImageConvertController extends Controller
 
             return response()->json([
                 'success' => true,
-                'download' => asset('storage/' . $zipRelativePath),
+                'download' => '/storage/' . $zipRelativePath,
                 'file_name' => $zipName,
             ]);
         } catch (\Throwable $e) {

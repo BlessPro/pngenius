@@ -233,7 +233,7 @@
         const formData = new FormData();
         files.forEach(item => formData.append('images[]', item.file));
 
-        fetch('{{ route('image.toPdf.convert') }}', {
+        fetch('{{ route('image.toPdf.convert', [], false) }}', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',

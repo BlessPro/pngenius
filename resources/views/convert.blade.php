@@ -304,7 +304,7 @@
             status.textContent = "Processing...";
             status.className = "status text-sm font-medium text-blue-600";
 
-            fetch('{{ route('image.convertFile') }}', {
+            fetch('{{ route('image.convertFile', [], false) }}', {
                 method: "POST",
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -371,7 +371,7 @@
         const formData = new FormData();
         readyFiles.forEach(fileName => formData.append('files[]', fileName));
 
-        fetch('{{ route('image.downloadZip') }}', {
+        fetch('{{ route('image.downloadZip', [], false) }}', {
             method: "POST",
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
