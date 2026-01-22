@@ -132,12 +132,12 @@
     <div id="typeform-modal" class="fixed inset-0 z-50 hidden">
         <div id="typeform-backdrop" class="absolute inset-0 bg-black bg-opacity-60"></div>
         <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white w-full max-w-3xl rounded-lg shadow-xl overflow-hidden">
+            <div class="bg-white w-full max-w-5xl rounded-lg shadow-xl overflow-hidden">
                 <div class="flex items-center justify-between px-4 py-3 border-b">
                     <h3 class="text-lg font-semibold text-gray-800">Stay in the loop</h3>
                     <button id="typeform-close" class="text-gray-500 hover:text-gray-800 text-2xl leading-none">&times;</button>
                 </div>
-                <div class="w-full h-[70vh]">
+                <div class="w-full h-[80vh]">
                     <iframe
                         src="https://gn65q2d504i.typeform.com/to/WH8tG6uP"
                         title="PNGenius Interest Form"
