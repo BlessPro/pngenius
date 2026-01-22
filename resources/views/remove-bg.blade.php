@@ -32,6 +32,11 @@
     </section>
 
     <section class="container mx-auto py-12 px-4">
+        <div class="max-w-3xl mx-auto flex justify-end mb-4">
+            <button id="typeform-open" class="border border-green-600 text-green-600 px-4 py-2 rounded hover:bg-green-600 hover:text-white font-semibold">
+                Share feedback
+            </button>
+        </div>
         <div class="max-w-3xl mx-auto bg-white rounded shadow p-6">
             <div class="flex flex-col gap-4">
                 <div class="flex items-center justify-between">
@@ -132,6 +137,27 @@
         <p>&copy; 2025 PNGenius. Built by <span class="text-green-400 font-semibold">10minal</span>.</p>
     </footer>
 
+    <div id="typeform-modal" class="fixed inset-0 z-50 hidden">
+        <div id="typeform-backdrop" class="absolute inset-0 bg-black bg-opacity-60"></div>
+        <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white w-full max-w-3xl rounded-lg shadow-xl overflow-hidden">
+                <div class="flex items-center justify-between px-4 py-3 border-b">
+                    <h3 class="text-lg font-semibold text-gray-800">Stay in the loop</h3>
+                    <button id="typeform-close" class="text-gray-500 hover:text-gray-800 text-2xl leading-none">&times;</button>
+                </div>
+                <div class="w-full h-[70vh]">
+                    <iframe
+                        src="https://gn65q2d504i.typeform.com/to/WH8tG6uP"
+                        title="PNGenius Interest Form"
+                        class="w-full h-full"
+                        frameborder="0"
+                        allow="camera; microphone; autoplay; encrypted-media;"
+                    ></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <script>
     const fileInput = document.getElementById('bg-file');
     const uploadBtn = document.getElementById('bg-upload-btn');
@@ -144,7 +170,13 @@
     const downloadLink = document.getElementById('bg-download');
     const fileCountEl = document.getElementById('file-count');
     const totalSizeEl = document.getElementById('total-size');
+    const typeformModal = document.getElementById('typeform-modal');
+    const typeformClose = document.getElementById('typeform-close');
+    const typeformBackdrop = document.getElementById('typeform-backdrop');
+    const typeformOpen = document.getElementById('typeform-open');
     let currentFile = null;
+    let typeformShown = false;
+    let typeformTimer = null;
 
     uploadBtn.onclick = () => fileInput.click();
 
@@ -197,6 +229,8 @@
             return;
         }
 
+        scheduleTypeform();
+
         removeBtn.disabled = true;
         statusEl.textContent = 'Processing...';
         statusEl.className = 'text-sm font-medium text-blue-600';
@@ -238,6 +272,43 @@
             removeBtn.disabled = false;
         });
     };
+
+    function showTypeform() {
+        if (!typeformModal) {
+            return;
+        }
+        typeformModal.classList.remove('hidden');
+    }
+
+    function hideTypeform() {
+        if (!typeformModal) {
+            return;
+        }
+        typeformModal.classList.add('hidden');
+    }
+
+    function scheduleTypeform() {
+        if (typeformShown || !typeformModal) {
+            return;
+        }
+        typeformShown = true;
+        typeformTimer = setTimeout(showTypeform, 3000);
+    }
+
+    if (typeformOpen) {
+        typeformOpen.addEventListener('click', showTypeform);
+    }
+    if (typeformClose) {
+        typeformClose.addEventListener('click', () => {
+            if (typeformTimer) {
+                clearTimeout(typeformTimer);
+            }
+            hideTypeform();
+        });
+    }
+    if (typeformBackdrop) {
+        typeformBackdrop.addEventListener('click', hideTypeform);
+    }
 
     updatePageStats();
 </script>
