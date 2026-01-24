@@ -168,12 +168,12 @@
     <div id="typeform-modal" class="fixed inset-0 z-50 hidden">
         <div id="typeform-backdrop" class="absolute inset-0 bg-black bg-opacity-60"></div>
         <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white w-full max-w-5xl rounded-lg shadow-xl overflow-hidden">
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden" style="width:95vw; max-width:1200px;">
                 <div class="flex items-center justify-between px-4 py-3 border-b">
                     <h3 class="text-lg font-semibold text-gray-800">Stay in the loop</h3>
                     <button id="typeform-close" class="text-gray-500 hover:text-gray-800 text-2xl leading-none">&times;</button>
                 </div>
-                <div class="w-full h-[80vh]">
+                <div class="w-full" style="height:85vh;">
                     <iframe
                         src="https://gn65q2d504i.typeform.com/to/WH8tG6uP"
                         title="PNGenius Interest Form"
@@ -205,6 +205,7 @@
     const typeformBackdrop = document.getElementById('typeform-backdrop');
     const typeformOpen = document.getElementById('typeform-open');
     const files = [];
+    const TYPEFORM_DELAY_MS = 6000;
     let typeformShown = false;
     let typeformTimer = null;
 
@@ -322,10 +323,6 @@
         convertBtn.disabled = true;
         let pending = 0;
 
-        if (!typeformShown && files.length > 0) {
-            scheduleTypeform();
-        }
-
         files.forEach(({ file, id, converted }) => {
             if (converted) return;
             pending += 1;
@@ -411,7 +408,7 @@
             return;
         }
         typeformShown = true;
-        typeformTimer = setTimeout(showTypeform, 3000);
+        typeformTimer = setTimeout(showTypeform, TYPEFORM_DELAY_MS);
     }
 
     if (typeformOpen) {
@@ -429,7 +426,16 @@
         typeformBackdrop.addEventListener('click', hideTypeform);
     }
 
+    if (fileList) {
+        fileList.addEventListener('click', (event) => {
+            if (event.target && event.target.classList.contains('download-btn')) {
+                scheduleTypeform();
+            }
+        });
+    }
+
     zipBtn.onclick = () => {
+        scheduleTypeform();
         const readyFiles = files
             .filter(item => item.converted && item.file_name)
             .map(item => item.file_name);
